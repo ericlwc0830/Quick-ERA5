@@ -1,4 +1,25 @@
-# quick_era5 Documentation
+# quick_era5
+
+## 一言以蔽之（In a nutshell）
+
+引入套件，下載資料，儲存資料。
+
+Import the package, download the data, and save the data.
+
+
+```python
+from quick_era5 import era5_downloader, era5_converter
+import datetime
+
+xarr = era5_downloader.download_era5_data_from_gcs(
+    variable_list=['2m_temperature', 'geopotential'],
+    from_datetime=datetime.datetime(2020, 1, 1, tzinfo=datetime.timezone.utc),  # 包含此時間（include）
+    to_datetime=datetime.datetime(2020, 1, 2, tzinfo=datetime.timezone.utc),  # 包含此時間（include）
+    time_interval=1,  # 以小時為單位（in hours）
+)
+
+era5_converter.era5_xarray_to_netcdf(xarr, save_at="output.nc")
+```
 
 ## 基本介紹（Introduction）
 
