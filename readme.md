@@ -85,7 +85,7 @@ xarr
 
 
 
-
+<body>
 <div><svg style="position: absolute; width: 0; height: 0; overflow: hidden">
 <defs>
 <symbol id="icon-database" viewBox="0 0 32 32">
@@ -512,7 +512,7 @@ Attributes:
                &#x27;2020-01-01 22:00:00&#x27;, &#x27;2020-01-01 23:00:00&#x27;,
                &#x27;2020-01-02 00:00:00&#x27;],
               dtype=&#x27;datetime64[ns]&#x27;, name=&#x27;time&#x27;, freq=None))</pre></div></li></ul></div></li><li class='xr-section-item'><input id='section-a66979c5-42be-447f-8f13-a91566a719da' class='xr-section-summary-in' type='checkbox'  checked><label for='section-a66979c5-42be-447f-8f13-a91566a719da' class='xr-section-summary' >Attributes: <span>(3)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><dl class='xr-attrs'><dt><span>valid_time_start :</span></dt><dd>1940-01-01</dd><dt><span>last_updated :</span></dt><dd>2024-10-17 20:04:10.783634</dd><dt><span>valid_time_stop :</span></dt><dd>2024-07-31</dd></dl></div></li></ul></div></div>
-
+</body>
 
 
 資料下載後，將會存放在快取資料夾內，以便下次快速存取，不過預設僅會保存14天，超過後將會於下次執行下載時自動刪除。若要調整快取檔案的存放期限，可以自行調整，如下：
