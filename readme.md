@@ -23,9 +23,21 @@ era5_converter.era5_xarray_to_netcdf(xarr, save_at="output.nc")
 
 ## 基本介紹（Introduction）
 
-這是一個用來快速下載與轉換ERA5資料的Python套件，可以利用它快速的下載ERA5的資料，並且將資料轉換成NetCDF、GeoTIFF等格式。
+這是一個用來快速下載與轉換「歐洲中期天氣預報中心第五代再分析資料（ECMWF Reanalysis v5, ERA5）」的Python套件，可以利用它快速的下載ERA5的資料，並且將資料轉換成NetCDF、GeoTIFF等格式。若想了解更多關於ERA5的資料，請參考[ERA5](https://www.ecmwf.int/en/forecasts/dataset/ecmwf-reanalysis-v5)。
 
-This is a Python package for quickly downloading and converting ERA5 data. You can use it to quickly download ERA5 data and convert it to formats such as NetCDF, GeoTIFF, etc.
+This is a Python package for quickly downloading and converting the "ECMWF Reanalysis v5 (ERA5)" data. You can use it to quickly download ERA5 data and convert the data into formats such as NetCDF, GeoTIFF, etc. If you want to know more about ERA5 data, please refer to [ERA5](https://www.ecmwf.int/en/forecasts/dataset/ecmwf-reanalysis-v5).
+
+## 資料來源（Data Source）
+
+本套件使用的ERA5資料來源為google cloud storage所存放之公開資料集，詳細資訊請參考[ERA5 data on Google Cloud](https://cloud.google.com/storage/docs/public-datasets/era5)。
+
+The ERA5 data used by this package is from the public dataset stored in google cloud storage. For more information, please refer to [ERA5 data on Google Cloud](https://cloud.google.com/storage/docs/public-datasets/era5).
+
+## 如何安裝（Installation）
+
+將quick_era5資料夾放到你的Python專案中，即可使用quick_era5套件，如下：
+
+Put the quick_era5 folder in your Python project, and you can use the quick_era5 package as follows:
 
 ## 資料來源（Data Source）
 
