@@ -23,34 +23,15 @@ era5_converter.era5_xarray_to_netcdf(xarr, save_at="output.nc")
 
 ## 基本介紹（Introduction）
 
-這是一個用來快速下載與轉換「歐洲中期天氣預報中心第五代再分析資料（ECMWF Reanalysis v5, ERA5）」的Python套件，可以利用它快速的下載ERA5的資料，並且將資料轉換成NetCDF、GeoTIFF等格式。若想了解更多關於ERA5的資料，請參考[ERA5](https://www.ecmwf.int/en/forecasts/dataset/ecmwf-reanalysis-v5)。
+這是一個用來快速下載與轉換「歐洲中期天氣預報中心第五代再分析資料（ECMWF Reanalysis v5, ERA5）」的Python套件，可以利用它快速的下載ERA5的資料，並且將資料轉換成NetCDF、GeoTIFF等格式。若想了解更多關於ERA5的資料，請參考[ERA5](https://www.ecmwf.int/en/forecasts/dataset/ecmwf-reanalysis-v5)。目前的版本於2024/10/26建立與更新。
 
-This is a Python package for quickly downloading and converting the "ECMWF Reanalysis v5 (ERA5)" data. You can use it to quickly download ERA5 data and convert the data into formats such as NetCDF, GeoTIFF, etc. If you want to know more about ERA5 data, please refer to [ERA5](https://www.ecmwf.int/en/forecasts/dataset/ecmwf-reanalysis-v5).
-
-## 資料來源（Data Source）
-
-本套件使用的ERA5資料來源為google cloud storage所存放之公開資料集，詳細資訊請參考[ERA5 data on Google Cloud](https://cloud.google.com/storage/docs/public-datasets/era5)。
-
-The ERA5 data used by this package is from the public dataset stored in google cloud storage. For more information, please refer to [ERA5 data on Google Cloud](https://cloud.google.com/storage/docs/public-datasets/era5).
+This is a Python package for quickly downloading and converting the "ECMWF Reanalysis v5 (ERA5)" data. You can use it to quickly download ERA5 data and convert the data into formats such as NetCDF, GeoTIFF, etc. If you want to know more about ERA5 data, please refer to [ERA5](https://www.ecmwf.int/en/forecasts/dataset/ecmwf-reanalysis-v5). The current version was created and updated on 2024/10/26.
 
 ## 如何安裝（Installation）
 
 將quick_era5資料夾放到你的Python專案中，即可使用quick_era5套件，如下：
 
 Put the quick_era5 folder in your Python project, and you can use the quick_era5 package as follows:
-
-## 資料來源（Data Source）
-
-本套件使用的ERA5資料來源為google cloud storage所存放之公開資料集，詳細資訊請參考[ERA5 data on Google Cloud](https://cloud.google.com/storage/docs/public-datasets/era5)。
-
-The ERA5 data used by this package is from the public dataset stored in google cloud storage. For more information, please refer to [ERA5 data on Google Cloud](https://cloud.google.com/storage/docs/public-datasets/era5).
-
-## 如何安裝（Installation）
-
-將quick_era5資料夾放到你的Python專案中，即可使用quick_era5套件，如下：
-
-Put the quick_era5 folder in your Python project, and you can use the quick_era5 package as follows:
-
 
 ```python
 from quick_era5 import era5_downloader, era5_converter
@@ -115,7 +96,7 @@ xarr = era5_downloader.download_era5_data_from_gcs(
 
 xarr
 ```
-    &lt;xarray.Dataset&gt; Size: 4GB
+    xarray.Dataset; Size: 4GB
     Dimensions:         (time: 25, latitude: 721, longitude: 1440, level: 37)
     Coordinates:
       * latitude        (latitude) float32 3kB 90.0 89.75 89.5 ... -89.75 -90.0
@@ -129,6 +110,7 @@ xarr
         valid_time_start:  1940-01-01
         last_updated:      2024-10-17 20:04:10.783634
         valid_time_stop:   2024-07-31
+```
 
 資料下載後，將會存放在快取資料夾內，以便下次快速存取，不過預設僅會保存14天，超過後將會於下次執行下載時自動刪除。若要調整快取檔案的存放期限，可以自行調整，如下：
 
@@ -220,6 +202,11 @@ plt.imshow(arr)
     
 ![png](readme_files/readme_18_1.png)
     
+## 資料來源（Data Source）
+
+本套件使用的ERA5資料來源為google cloud storage所存放之公開資料集，詳細資訊請參考[ERA5 data on Google Cloud](https://cloud.google.com/storage/docs/public-datasets/era5)。
+
+The ERA5 data used by this package is from the public dataset stored in google cloud storage. For more information, please refer to [ERA5 data on Google Cloud](https://cloud.google.com/storage/docs/public-datasets/era5).
 
 
 ## 完整說明文件
