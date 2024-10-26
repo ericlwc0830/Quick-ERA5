@@ -225,9 +225,17 @@ The ERA5 data used by this package is from the public dataset stored in google c
 
 #### era5_gcp_path
 
+```python
+quick_era5.era5_downloader.era5_gcp_path = 'path/to/gcp/era5/data'
+```
+
 此設定值用來指定ERA5資料在GCS中的路徑，預設為`gs://gcp-public-data-arco-era5/ar/full_37-1h-0p25deg-chunk-1.zarr-v3`。
 
 #### expire_days
+
+```python
+quick_era5.era5_downloader.expire_days = 14
+```
 
 此設定值用來指定快取檔案的存放期限，預設為14天。
 
@@ -235,8 +243,11 @@ The ERA5 data used by this package is from the public dataset stored in google c
 
 #### download_era5_data_from_gcs
 
-下載GCS中的ERA5資料，並回傳xarray資料集。
+```python
+quick_era5.era5_downloader.download_era5_data_from_gcs(variable_list, from_date, to_date, data_steps)
+```
 
+下載GCS中的ERA5資料，並回傳xarray資料集。
 
 參數：
 - variable_list: list, 要下載的變數列表。
@@ -250,7 +261,11 @@ The ERA5 data used by this package is from the public dataset stored in google c
 
 #### show_era5_variables
 
-顯示ERA5資料集中的氣象變數。
+```python
+quick_era5.era5_downloader.show_era5_variables()
+```
+
+顯示ERA5資料集中的可用氣象變數。
 
 參數：
 - 無
@@ -261,6 +276,10 @@ The ERA5 data used by this package is from the public dataset stored in google c
 ### era5_converter 函數
 
 #### convert_xarray_to_netcdf
+
+```python
+quick_era5.era5_converter.convert_xarray_to_netcdf(xarr, file_path)
+```
 
 將xarray資料集存成NetCDF檔案。
 
@@ -273,12 +292,16 @@ The ERA5 data used by this package is from the public dataset stored in google c
 
 #### convert_xarray_to_geotiff
 
+```python
+quick_era5.era5_converter.convert_xarray_to_geotiff(xarr, variable, z, time, save_at)
+```
+
 將xarray資料集中指定的變數、高度、時間資料存成GeoTIFF檔案。
 
 參數：
 - xarr: xarray.core.dataset.Dataset, 要存的xarray資料集。
 - variable: str, 要存的變數。
-- z: int or float or None, 要存的高度，若資料只有一個高度，請使用None。
+- z: int or float or None, 要存的高度，若資料只有一個高度（例如湖泊覆蓋、兩米溫度等），請使用None。
 - time: datetime.datetime, 要存的時間，若時區為None，將會轉換成UTC。
 - save_at: str, 要存的GeoTIFF檔案路徑。
 
@@ -287,12 +310,16 @@ The ERA5 data used by this package is from the public dataset stored in google c
 
 #### convert_xarray_to_numpy_array
 
+```python
+quick_era5.era5_converter.convert_xarray_to_numpy_array(xarr, variable, z, time)
+```
+
 將xarray資料集中指定的變數、高度、時間資料存成numpy陣列。
 
 參數：
 - xarr: xarray.core.dataset.Dataset, 要存的xarray資料集。
 - variable: str, 要存的變數。
-- z: int or float or None, 要存的高度，若資料只有一個高度，請使用None。
+- z: int or float or None, 要存的高度，若資料只有一個高度（例如湖泊覆蓋、兩米溫度等），請使用None。
 - time: datetime.datetime, 要存的時間，若時區為None，將會轉換成UTC。
 
 回傳：
@@ -304,15 +331,27 @@ The ERA5 data used by this package is from the public dataset stored in google c
 
 #### era5_gcp_path
 
+```python
+quick_era5.era5_downloader.era5_gcp_path = 'path/to/gcp/era5/data'
+```
+
 This setting value is used to specify the path of ERA5 data in GCS, and the default value is `gs://gcp-public-data-arco-era5/ar/full_37-1h-0p25deg-chunk-1.zarr-v3`.
 
 #### expire_days
+
+```python
+quick_era5.era5_downloader.expire_days = 14
+```
 
 This setting value is used to specify the storage period of the cache file, and the default value is 14 days.
 
 ### era5_downloader functions
 
 #### download_era5_data_from_gcs
+
+```python
+quick_era5.era5_downloader.download_era5_data_from_gcs(variable_list, from_date, to_date, data_steps)
+```
 
 Download the era5 data from GCS and return the xarray dataset.
 
@@ -327,6 +366,10 @@ Returns:
 
 #### show_era5_variables
 
+```python
+quick_era5.era5_downloader.show_era5_variables()
+```
+
 Show the variables in the era5 dataset.
 
 Args:
@@ -339,6 +382,10 @@ Returns:
 
 #### convert_xarray_to_netcdf
 
+```python
+quick_era5.era5_converter.convert_xarray_to_netcdf(xarr, file_path)
+```
+
 Save the xarray dataset to a netcdf file.
 
 Args:
@@ -350,12 +397,16 @@ Returns:
 
 #### convert_xarray_to_geotiff
 
+```python
+quick_era5.era5_converter.convert_xarray_to_geotiff(xarr, variable, z, time, save_at)
+```
+
 Save the specified variable, pressure level, time data in the xarray dataset to a geotiff file.
 
 Args:
 - xarr: xarray.core.dataset.Dataset, the xarray dataset to save.
 - variable: str, the variable to save.
-- z: int or float or None, the z level to save, if data has only one level, use None.
+- z: int or float or None, the z level to save, if data has only one level(like lake cover, 2m temperature, etc.), use None.
 - time: datetime.datetime, the time to save, if timezone is None, it will be converted to UTC.
 - save_at: str, the file path to save geotiff file.
 
@@ -364,12 +415,16 @@ Returns:
 
 #### convert_xarray_to_numpy_array
 
+```python
+quick_era5.era5_converter.convert_xarray_to_numpy_array(xarr, variable, z, time)
+```
+
 Save the specified variable, pressure level, time data in the xarray dataset to a numpy array.
 
 Args:
 - xarr: xarray.core.dataset.Dataset, the xarray dataset to save.
 - variable: str, the variable to save.
-- z: int or float or None, the z level to save, if data has only one level, use None.
+- z: int or float or None, the z level to save, if data has only one level(like lake cover, 2m temperature, etc.), use None.
 - time: datetime.datetime, the time to save, if timezone is None, it will be converted to UTC.
 
 Returns:
