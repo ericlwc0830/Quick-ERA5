@@ -1,4 +1,4 @@
-# quick_era5
+# Quick-ERA5
 
 ## 一言以蔽之（In a nutshell）
 
@@ -29,9 +29,9 @@ This is a Python package for quickly downloading and converting the "ECMWF Reana
 
 ## 如何安裝（Installation）
 
-將quick_era5資料夾放到你的Python專案中，即可使用quick_era5套件，如下：
+將GITHUB存放庫內的quick_era5資料夾放到你的Python專案中，即可使用quick_era5套件，如下：
 
-Put the quick_era5 folder in your Python project, and you can use the quick_era5 package as follows:
+Put the quick_era5 folder in this repository into your Python project, and you can use the quick_era5 package as follows:
 
 ```python
 from quick_era5 import era5_downloader, era5_converter
