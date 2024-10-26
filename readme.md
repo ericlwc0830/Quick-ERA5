@@ -1,5 +1,11 @@
 # Quick-ERA5
 
+## 基本介紹（Introduction）
+
+這是一個用來快速下載與轉換「歐洲中期天氣預報中心第五代再分析資料（ECMWF Reanalysis v5, ERA5）」的Python套件，可以利用它快速的下載ERA5的資料，並且將資料轉換成NetCDF、GeoTIFF等格式。若想了解更多關於ERA5的資料，請參考[ERA5](https://www.ecmwf.int/en/forecasts/dataset/ecmwf-reanalysis-v5)。目前的版本於2024/10/26建立與更新。
+
+This is a Python package for quickly downloading and converting the "ECMWF Reanalysis v5 (ERA5)" data. You can use it to quickly download ERA5 data and convert the data into formats such as NetCDF, GeoTIFF, etc. If you want to know more about ERA5 data, please refer to [ERA5](https://www.ecmwf.int/en/forecasts/dataset/ecmwf-reanalysis-v5). The current version was created and updated on 2024/10/26.
+
 ## 一言以蔽之（In a nutshell）
 
 引入套件，下載資料，儲存資料。
@@ -20,12 +26,6 @@ xarr = era5_downloader.download_era5_data_from_gcs(
 
 era5_converter.era5_xarray_to_netcdf(xarr, save_at="output.nc")
 ```
-
-## 基本介紹（Introduction）
-
-這是一個用來快速下載與轉換「歐洲中期天氣預報中心第五代再分析資料（ECMWF Reanalysis v5, ERA5）」的Python套件，可以利用它快速的下載ERA5的資料，並且將資料轉換成NetCDF、GeoTIFF等格式。若想了解更多關於ERA5的資料，請參考[ERA5](https://www.ecmwf.int/en/forecasts/dataset/ecmwf-reanalysis-v5)。目前的版本於2024/10/26建立與更新。
-
-This is a Python package for quickly downloading and converting the "ECMWF Reanalysis v5 (ERA5)" data. You can use it to quickly download ERA5 data and convert the data into formats such as NetCDF, GeoTIFF, etc. If you want to know more about ERA5 data, please refer to [ERA5](https://www.ecmwf.int/en/forecasts/dataset/ecmwf-reanalysis-v5). The current version was created and updated on 2024/10/26.
 
 ## 如何安裝（Installation）
 
@@ -146,18 +146,17 @@ If you want to convert the xarray dataset with specified variables, heights, and
 
 
 ```python
-# 當變數只有一個高度時，z設為None
-# When the variable has only one height, set z to None
-xarr = xarr
-variable = '2m_temperature'
-z = None 
-time = datetime.datetime(2020, 1, 1, 12, tzinfo=datetime.timezone.utc)
-save_at = 'output_2m_temperature.tif'
-era5_converter.era5_xarray_to_geotiff(xarr=xarr, variable=variable, z=z, time=time, save_at=save_at)
-
-
 # 當變數包含多種高度時，z設為要的高度
 # When the variable has multiple heights, set z to the desired height
+xarr = xarr
+variable = 'geopotential'
+z = None 
+time = datetime.datetime(2020, 1, 1, 12, tzinfo=datetime.timezone.utc)
+save_at = 'output_geopotential.tif'
+era5_converter.era5_xarray_to_geotiff(xarr=xarr, variable=variable, z=z, time=time, save_at=save_at)
+
+# 當變數只有一個高度時，z設為None
+# When the variable has only one height, set z to None
 xarr = xarr
 variable = '2m_temperature'
 z = None 
@@ -174,21 +173,31 @@ If you want to convert the xarray dataset to a numpy array, you can use the foll
 
 
 ```python
+# 當變數包含多種高度時，z設為要的高度
+xarr = xarr
+variable = 'geopotential'
+z = 1000
+time = datetime.datetime(2020, 1, 1, 12, tzinfo=datetime.timezone.utc)
+geopotential_arr = era5_converter.era5_xarray_to_nparray(xarr=xarr, variable=variable, z=z, time=time)
+print(geopotential_arr)
+
+# 當變數只有一個高度時，z設為None
 xarr = xarr
 variable = '2m_temperature'
 z = None
 time = datetime.datetime(2020, 1, 1, 12, tzinfo=datetime.timezone.utc)
-arr = era5_converter.era5_xarray_to_nparray(xarr=xarr, variable=variable, z=z, time=time)
+temp_2m_arr = era5_converter.era5_xarray_to_nparray(xarr=xarr, variable=variable, z=z, time=time)
+print(temp_2m_arr)
 ```
 
-以下程式碼示範如何快速繪製該numpy陣列：
+以下程式碼示範如何快速繪製numpy陣列，以2m_temperature為例：
 
-The following code demonstrates how to quickly plot the numpy array:
+The following code demonstrates how to quickly plot the numpy array, using 2m_temperature as an example:
 
 
 ```python
 from matplotlib import pyplot as plt
-plt.imshow(arr)
+plt.imshow(temp_2m_arr)
 ```
 
 
