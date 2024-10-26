@@ -6,8 +6,16 @@ import xarray
 gcs = gcsfs.GCSFileSystem(token='anon')
 
 # config
-local_full_era5_zarr_at = os.path.abspath(__file__).replace('era5_downloader.py', 'asset/full_era5.pkl')
-cache_era5_folder = os.path.abspath(__file__).replace('era5_downloader.py', 'cache/era5/')
+if os.name == 'nt':
+    # windows
+    local_full_era5_zarr_at = os.path.abspath(__file__).replace('era5_downloader.py', 'asset\\full_era5.pkl')
+    cache_era5_folder = os.path.abspath(__file__).replace('era5_downloader.py', 'cache\\era5\\')
+else:
+    # linux / macos
+    local_full_era5_zarr_at = os.path.abspath(__file__).replace('era5_downloader.py', 'asset/full_era5.pkl')
+    cache_era5_folder = os.path.abspath(__file__).replace('era5_downloader.py', 'cache/era5/')
+era5_gcp_path = 'gs://gcp-public-data-arco-era5/ar/full_37-1h-0p25deg-chunk-1.zarr-v3'
+expire_days = 14
 era5_gcp_path = 'gs://gcp-public-data-arco-era5/ar/full_37-1h-0p25deg-chunk-1.zarr-v3'
 expire_days = 14
 
