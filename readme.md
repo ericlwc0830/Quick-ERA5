@@ -58,6 +58,7 @@ The following are the packages that the quick_era5 package depends on, with the 
 - affine (2.4.0)
 - datetime
 - gcsfs (2024.9.0post1)
+- netCDF4 (1.6.2)
 - numpy (1.26.4)
 - os
 - pandas (2.2.2)
