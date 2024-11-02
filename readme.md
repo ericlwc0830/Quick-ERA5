@@ -1,8 +1,8 @@
-# Quick-ERA5
+# quick_era5
 
 ## 基本介紹（Introduction）
 
-這是一個用來快速下載與轉換「歐洲中期天氣預報中心第五代再分析資料（ECMWF Reanalysis v5, ERA5）」的Python套件，可以利用它快速的下載ERA5的資料，並且將資料轉換成NetCDF、GeoTIFF等格式。若想了解更多關於ERA5的資料，請參考[ERA5](https://www.ecmwf.int/en/forecasts/dataset/ecmwf-reanalysis-v5)。目前的版本於2024/10/26建立與更新。
+這是一個用來快速下載與轉換「歐洲中期天氣預報中心第五代再分析資料（ECMWF Reanalysis v5, ERA5）」的Python套件，可以利用它快速的下載ERA5的資料，並且將資料轉換成NetCDF、GeoTIFF等格式。若想了解更多關於ERA5的資料，請參考[ERA5](https://www.ecmwf.int/en/forecasts/dataset/ecmwf-reanalysis-v5)。目前的版本於2024/11/3更新。
 
 This is a Python package for quickly downloading and converting the "ECMWF Reanalysis v5 (ERA5)" data. You can use it to quickly download ERA5 data and convert the data into formats such as NetCDF, GeoTIFF, etc. If you want to know more about ERA5 data, please refer to [ERA5](https://www.ecmwf.int/en/forecasts/dataset/ecmwf-reanalysis-v5). The current version was created and updated on 2024/10/26.
 
@@ -22,6 +22,9 @@ xarr = era5_downloader.download_era5_data_from_gcs(
     from_datetime=datetime.datetime(2020, 1, 1, tzinfo=datetime.timezone.utc),  # 包含此時間（include）
     to_datetime=datetime.datetime(2020, 1, 2, tzinfo=datetime.timezone.utc),  # 包含此時間（include）
     time_interval=1,  # 以小時為單位（in hours）
+    level_range=(500,1000)
+    latitude_range=(0, 90),
+    longitude_range=(90, 180),
 )
 
 era5_converter.era5_xarray_to_netcdf(xarr, save_at="output.nc")
@@ -29,9 +32,10 @@ era5_converter.era5_xarray_to_netcdf(xarr, save_at="output.nc")
 
 ## 如何安裝（Installation）
 
-將GITHUB存放庫內的quick_era5資料夾放到你的Python專案中，即可使用quick_era5套件，如下：
+將quick_era5資料夾放到你的Python專案中，即可使用quick_era5套件，如下：
 
-Put the quick_era5 folder in this repository into your Python project, and you can use the quick_era5 package as follows:
+Put the quick_era5 folder in your Python project, and you can use the quick_era5 package as follows:
+
 
 ```python
 from quick_era5 import era5_downloader, era5_converter
@@ -93,24 +97,31 @@ xarr = era5_downloader.download_era5_data_from_gcs(
     from_datetime=datetime.datetime(2020, 1, 1, tzinfo=datetime.timezone.utc),  # 包含此時間（include）
     to_datetime=datetime.datetime(2020, 1, 2, tzinfo=datetime.timezone.utc),  # 包含此時間（include）
     time_interval=1,  # 以小時為單位（in hours）
+    level_range=(500,1000),
+    latitude_range=(0, 90),
+    longitude_range=(90, 180),
+    longitude_shift=True, # 經緯度範圍是180W~180E，東西經可以是以-180~180，或是以偏移後的0~360表示
 )
 
 xarr
 ```
-    xarray.Dataset; Size: 4GB
-    Dimensions:         (time: 25, latitude: 721, longitude: 1440, level: 37)
-    Coordinates:
-      * latitude        (latitude) float32 3kB 90.0 89.75 89.5 ... -89.75 -90.0
-      * level           (level) int64 296B 1 2 3 5 7 10 ... 875 900 925 950 975 1000
-      * longitude       (longitude) float32 6kB 0.0 0.25 0.5 ... 359.2 359.5 359.8
-      * time            (time) datetime64[ns] 200B 2020-01-01 ... 2020-01-02
-    Data variables:
-        2m_temperature  (time, latitude, longitude) float32 104MB ...
-        geopotential    (time, level, latitude, longitude) float32 4GB ...
-    Attributes:
-        valid_time_start:  1940-01-01
-        last_updated:      2024-10-17 20:04:10.783634
-        valid_time_stop:   2024-07-31
+
+```
+&lt;xarray.Dataset&gt; Size: 222MB
+Dimensions:         (time: 25, latitude: 361, longitude: 361, level: 16)
+Coordinates:
+  * latitude        (latitude) float32 1kB 90.0 89.75 89.5 ... 0.5 0.25 0.0
+  * level           (level) int64 128B 500 550 600 650 700 ... 925 950 975 1000
+  * longitude       (longitude) float32 1kB 90.0 90.25 90.5 ... 179.8 180.0
+  * time            (time) datetime64[ns] 200B 2020-01-01 ... 2020-01-02
+Data variables:
+    2m_temperature  (time, latitude, longitude) float32 13MB 246.5 ... 300.9
+    geopotential    (time, level, latitude, longitude) float32 209MB 4.83e+04...
+Attributes:
+    valid_time_start:  1940-01-01
+    last_updated:      2024-10-17 20:04:10.783634
+    valid_time_stop:   2024-07-31
+```
 
 
 資料下載後，將會存放在快取資料夾內，以便下次快速存取，不過預設僅會保存14天，超過後將會於下次執行下載時自動刪除。若要調整快取檔案的存放期限，可以自行調整，如下：
@@ -151,7 +162,7 @@ If you want to convert the xarray dataset with specified variables, heights, and
 # When the variable has multiple heights, set z to the desired height
 xarr = xarr
 variable = 'geopotential'
-z = None 
+z = 1000
 time = datetime.datetime(2020, 1, 1, 12, tzinfo=datetime.timezone.utc)
 save_at = 'output_geopotential.tif'
 era5_converter.era5_xarray_to_geotiff(xarr=xarr, variable=variable, z=z, time=time, save_at=save_at)
@@ -191,6 +202,22 @@ temp_2m_arr = era5_converter.era5_xarray_to_nparray(xarr=xarr, variable=variable
 print(temp_2m_arr)
 ```
 
+    [[ 390.10315  390.10315  390.10315 ...  390.10315  390.10315  390.10315]
+     [ 399.22318  366.47897  366.47897 ...  399.00342  399.11328  399.22318]
+     [ 410.21115  341.86588  342.08563 ...  409.77164  409.88153  410.1013 ]
+     ...
+     [ 874.2339  1013.3418  1012.7924  ...  876.65125  876.5414   876.10187]
+     [ 875.1129  1009.6059  1010.59485 ...  875.00305  875.8821   876.9809 ]
+     [ 877.2007  1006.4194  1008.617   ...  874.4537   875.44257  877.4204 ]]
+    [[245.96442 245.96442 245.96442 ... 245.96442 245.96442 245.96442]
+     [246.71997 246.03212 246.03674 ... 246.71074 246.71382 246.71689]
+     [246.88    245.74129 245.7459  ... 246.86308 246.86923 246.87386]
+     ...
+     [301.07132 300.71585 300.67737 ... 301.23752 301.25598 301.10672]
+     [300.93896 300.72046 300.70047 ... 301.36215 301.36215 301.03284]
+     [300.88666 300.68506 300.64044 ... 301.44064 301.41754 301.08517]]
+
+
 以下程式碼示範如何快速繪製numpy陣列，以2m_temperature為例：
 
 The following code demonstrates how to quickly plot the numpy array, using 2m_temperature as an example:
@@ -204,20 +231,21 @@ plt.imshow(temp_2m_arr)
 
 
 
-    <matplotlib.image.AxesImage at 0x1681742b0>
+    <matplotlib.image.AxesImage at 0x14e40ad10>
 
 
 
 
     
-![png](readme_files/readme_18_1.png)
+![png](readme_files/readme_21_1.png)
     
+
+
 ## 資料來源（Data Source）
 
 本套件使用的ERA5資料來源為google cloud storage所存放之公開資料集，詳細資訊請參考[ERA5 data on Google Cloud](https://cloud.google.com/storage/docs/public-datasets/era5)。
 
 The ERA5 data used by this package is from the public dataset stored in google cloud storage. For more information, please refer to [ERA5 data on Google Cloud](https://cloud.google.com/storage/docs/public-datasets/era5).
-
 
 ## 完整說明文件
 
@@ -244,20 +272,46 @@ quick_era5.era5_downloader.expire_days = 14
 #### download_era5_data_from_gcs
 
 ```python
-quick_era5.era5_downloader.download_era5_data_from_gcs(variable_list, from_date, to_date, data_steps)
+quick_era5.era5_downloader.download_era5_data_from_gcs(variable_list, from_datetime, to_datetime, time_interval, level_range, latitude_range, longitude_range, longitude_shift)
 ```
 
 下載GCS中的ERA5資料，並回傳xarray資料集。
 
 參數：
-- variable_list: list, 要下載的變數列表。
-- from_date: datetime.datetime, 資料的起始時間。
-- to_date: datetime.datetime, 資料的結束時間（包含此時間）。
-- data_steps: int, 每筆資料之間的時間間隔。
+- variable_list (list): 
+
+    要下載的變數列表。例如['geopotential', 'temperature']
+    
+- from_datetime (datetime.datetime):
+    
+    資料的起始時間，必須包含時區資訊。例如datetime.datetime(2023, 1, 1, 12, tzinfo=datetime.timezone.utc)
+
+- to_datetime (datetime.datetime):
+    
+    資料的結束時間（包含此時間），必須包含時區資訊。例如datetime.datetime(2023, 1, 2, 12, tzinfo=datetime.timezone.utc)
+
+- time_interval (int):
+    
+    每筆資料之間的時間間隔。預設為True。
+    
+- level_range (tuple or int):
+    
+    要下載的氣壓層範圍。若為int，僅下載該氣壓層。若為tuple，下載層級範圍（包含）。預設為(1000, 0)。
+
+- latitude_range (tuple):
+    
+    要下載的緯度範圍。預設為(-90, 90)。
+
+- longitude_range (tuple):
+    
+    要下載的經度範圍。預設為(0, 360)。
+
+- longitude_shift (bool):
+    
+    若為True，將經度從-180~180轉換成0-360，無論何種表示法0~180皆是表示東半球。預設為True，因為這是原始的ERA5表示方式。
 
 回傳：
 - xarray.Dataset, 下載的ERA5資料集。
-
 
 #### show_era5_variables
 
@@ -284,8 +338,10 @@ quick_era5.era5_converter.convert_xarray_to_netcdf(xarr, file_path)
 將xarray資料集存成NetCDF檔案。
 
 參數：
-- xarr: xarray.core.dataset.Dataset, 要存的xarray資料集。
-- file_path: str, 要存的檔案路徑。
+- xarr (xarray.core.dataset.Dataset):
+    要存的xarray資料集。
+- file_path (str):
+    要存的NetCDF檔案路徑。
 
 回傳：
 - None
@@ -299,11 +355,16 @@ quick_era5.era5_converter.convert_xarray_to_geotiff(xarr, variable, z, time, sav
 將xarray資料集中指定的變數、高度、時間資料存成GeoTIFF檔案。
 
 參數：
-- xarr: xarray.core.dataset.Dataset, 要存的xarray資料集。
-- variable: str, 要存的變數。
-- z: int or float or None, 要存的高度，若資料只有一個高度（例如湖泊覆蓋、兩米溫度等），請使用None。
-- time: datetime.datetime, 要存的時間，若時區為None，將會轉換成UTC。
-- save_at: str, 要存的GeoTIFF檔案路徑。
+- xarr (xarray.core.dataset.Dataset):
+    要存的xarray資料集。
+- variable (str):
+    要存的變數。
+- z (int or float or None):
+    要存的高度，若資料只有一個高度（例如湖泊覆蓋、兩米溫度等），請使用None。
+- time (datetime.datetime):
+    要存的時間，若時區為None，將會轉換成UTC。
+- save_at (str):
+    要存的GeoTIFF檔案路徑。
 
 回傳：
 - None
@@ -317,10 +378,14 @@ quick_era5.era5_converter.convert_xarray_to_numpy_array(xarr, variable, z, time)
 將xarray資料集中指定的變數、高度、時間資料存成numpy陣列。
 
 參數：
-- xarr: xarray.core.dataset.Dataset, 要存的xarray資料集。
-- variable: str, 要存的變數。
-- z: int or float or None, 要存的高度，若資料只有一個高度（例如湖泊覆蓋、兩米溫度等），請使用None。
-- time: datetime.datetime, 要存的時間，若時區為None，將會轉換成UTC。
+- xarr (xarray.core.dataset.Dataset):
+    要存的xarray資料集。
+- variable (str):
+    要存的變數。
+- z (int or float or None):
+    要存的高度，若資料只有一個高度（例如湖泊覆蓋、兩米溫度等），請使用None。
+- time (datetime.datetime):
+    要存的時間，若時區為None，將會轉換成UTC。
 
 回傳：
 - np.ndarray, 指定變數、高度、時間資料的numpy陣列。
@@ -350,19 +415,31 @@ This setting value is used to specify the storage period of the cache file, and 
 #### download_era5_data_from_gcs
 
 ```python
-quick_era5.era5_downloader.download_era5_data_from_gcs(variable_list, from_date, to_date, data_steps)
+quick_era5.era5_downloader.download_era5_data_from_gcs(variable_list, from_datetime, to_datetime, time_interval, level_range, latitude_range, longitude_range, longitude_shift)
 ```
 
 Download the era5 data from GCS and return the xarray dataset.
 
 Args:
-- variable_list: list, list of variables to download.
-- from_date: datetime.datetime, start datetime of the data.
-- to_date: datetime.datetime, end datetime (include this datetime) of the data.
-- data_steps: int, hours between each data.
+    variable_list (list): 
+        List of variables to download. e.g. ['geopotential', 'temperature']
+    from_datetime (datetime.datetime): 
+        Start datetime of the data, must include timezone information. e.g. datetime.datetime(2023, 1, 1, 12, tzinfo=datetime.timezone.utc)
+    to_datetime (datetime.datetime): 
+        End datetime (include this datetime) of the data, must include timezone information. e.g. datetime.datetime(2023, 1, 2, 12, tzinfo=datetime.timezone.utc)
+    time_interval (int): 
+        Hours between each data. Default is True.
+    level_range (tuple or int): 
+        Level range to download. If int, download only the level. If tuple, download the range of levels (include). Default is (1000, 0).
+    latitude_range (tuple): 
+        Latitude range to download. Default is (-90, 90).
+    longitude_range (tuple): 
+        Longitude range to download. Default is (0, 360).
+    longitude_shift (bool):
+        If True, shift the longitude from -180~180 to 0-360. Default is True.
 
 Returns:
-- xarray.Dataset, the era5 dataset.
+    xarray.Dataset: The era5 dataset.
 
 #### show_era5_variables
 
@@ -389,8 +466,10 @@ quick_era5.era5_converter.convert_xarray_to_netcdf(xarr, file_path)
 Save the xarray dataset to a netcdf file.
 
 Args:
-- xarr, xarray.core.dataset.Dataset, the xarray dataset to save.
-- file_path, str, the file path to save the xarray dataset.
+- xarr (xarray.core.dataset.Dataset):
+    the xarray dataset to save.
+- file_path (str):
+    the file path to save the xarray dataset.
 
 Returns:
 - None
@@ -404,11 +483,16 @@ quick_era5.era5_converter.convert_xarray_to_geotiff(xarr, variable, z, time, sav
 Save the specified variable, pressure level, time data in the xarray dataset to a geotiff file.
 
 Args:
-- xarr: xarray.core.dataset.Dataset, the xarray dataset to save.
-- variable: str, the variable to save.
-- z: int or float or None, the z level to save, if data has only one level(like lake cover, 2m temperature, etc.), use None.
-- time: datetime.datetime, the time to save, if timezone is None, it will be converted to UTC.
-- save_at: str, the file path to save geotiff file.
+- xarr (xarray.core.dataset.Dataset)
+    the xarray dataset to save.
+- variable (str)
+    the variable to save.
+- z (int or float or None)
+    the z level to save, if data has only one level(like lake cover, 2m temperature, etc.), use None.
+- time (datetime.datetime)
+    the time to save, if timezone is None, it will be converted to UTC.
+- save_at (str):
+    the file path to save geotiff file.
 
 Returns:
 - None
@@ -422,10 +506,14 @@ quick_era5.era5_converter.convert_xarray_to_numpy_array(xarr, variable, z, time)
 Save the specified variable, pressure level, time data in the xarray dataset to a numpy array.
 
 Args:
-- xarr: xarray.core.dataset.Dataset, the xarray dataset to save.
-- variable: str, the variable to save.
-- z: int or float or None, the z level to save, if data has only one level(like lake cover, 2m temperature, etc.), use None.
-- time: datetime.datetime, the time to save, if timezone is None, it will be converted to UTC.
+- xarr (xarray.core.dataset.Dataset):
+    the xarray dataset to save.
+- variable (str):
+    the variable to save.
+- z (int or float or None):
+    the z level to save, if data has only one level(like lake cover, 2m temperature, etc.), use None.
+- time (datetime.datetime):
+    the time to save, if timezone is None, it will be converted to UTC.
 
 Returns:
 - np.ndarray, the numpy array of the specified variable, pressure level, time data.
