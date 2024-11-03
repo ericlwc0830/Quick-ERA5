@@ -51,6 +51,9 @@ def download_era5_data_from_gcs(
     Returns:
         xarray.Dataset: The era5 dataset.
     """
+    # [update the local era5 if have new data]
+    update_if_have_new_era5()
+
     # [load the full era5 zarr file]
     full_era5 = _load_full_era5()
     valid_time_start = datetime.datetime.strptime(full_era5.valid_time_start, '%Y-%m-%d')
@@ -206,6 +209,27 @@ def _load_full_era5() -> xarray.Dataset:
         full_era5 = pickle.load(open(local_full_era5_zarr_at, 'rb'))
 
     return full_era5
+
+
+def get_latest_era5_end_time():
+    era5_gcp_attr_path = 'gs://gcp-public-data-arco-era5/ar/full_37-1h-0p25deg-chunk-1.zarr-v3/.zattrs'
+    era5_gcp_attr_content = eval(gcs.cat(era5_gcp_attr_path))
+    latest_era5_end_time = datetime.datetime.strptime(era5_gcp_attr_content['valid_time_stop'], '%Y-%m-%d')
+    return latest_era5_end_time
+
+
+def get_local_era5_stop_time():
+    full_era5 = _load_full_era5()
+    valid_time_stop = datetime.datetime.strptime(full_era5.valid_time_stop, '%Y-%m-%d')
+    return valid_time_stop
+
+
+def update_if_have_new_era5():
+    latest_era5_end_time = get_latest_era5_end_time()
+    local_era5_stop_time = get_local_era5_stop_time()
+    if latest_era5_end_time > local_era5_stop_time:
+        os.remove(local_full_era5_zarr_at)
+        download_full_era5_zarr()
 
 
 def _generate_cache_name(from_datetime, to_datetime, time_interval, variable_list, level_range, latitude_range, longitude_range, longitude_shift):

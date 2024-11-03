@@ -2,9 +2,9 @@
 
 ## 基本介紹（Introduction）
 
-這是一個用來快速下載與轉換「歐洲中期天氣預報中心第五代再分析資料（ECMWF Reanalysis v5, ERA5）」的Python套件，可以利用它快速的下載ERA5的資料，並且將資料轉換成NetCDF、GeoTIFF等格式。若想了解更多關於ERA5的資料，請參考[ERA5](https://www.ecmwf.int/en/forecasts/dataset/ecmwf-reanalysis-v5)。目前的版本於2024/11/3更新。
+這是一個用來快速下載與轉換「歐洲中期天氣預報中心第五代再分析資料（ECMWF Reanalysis v5, ERA5）」的Python套件，可以利用它快速的下載ERA5的資料，並且將資料轉換成NetCDF、GeoTIFF等格式。若想了解更多關於ERA5的資料，請參考[ERA5](https://www.ecmwf.int/en/forecasts/dataset/ecmwf-reanalysis-v5)。目前的版本於2024/11/4更新。
 
-This is a Python package for quickly downloading and converting the "ECMWF Reanalysis v5 (ERA5)" data. You can use it to quickly download ERA5 data and convert the data into formats such as NetCDF, GeoTIFF, etc. If you want to know more about ERA5 data, please refer to [ERA5](https://www.ecmwf.int/en/forecasts/dataset/ecmwf-reanalysis-v5). The current version was created and updated on 2024/10/26.
+This is a Python package for quickly downloading and converting the "ECMWF Reanalysis v5 (ERA5)" data. You can use it to quickly download ERA5 data and convert the data into formats such as NetCDF, GeoTIFF, etc. If you want to know more about ERA5 data, please refer to [ERA5](https://www.ecmwf.int/en/forecasts/dataset/ecmwf-reanalysis-v5). The current version was created and updated on 2024/11/4.
 
 ## 一言以蔽之（In a nutshell）
 
@@ -519,3 +519,8 @@ Returns:
 - np.ndarray, the numpy array of the specified variable, pressure level, time data.
 
 
+## 更新紀錄
+
+- 2024/10/23: 初次建立
+- 2024/11/3: 新增直接指定下載局部區域的功能
+- 2024/11/4: 新增更新ERA5原始資料的功能，每次執行下載時都會檢查是否有新的ERA5資料，若有便會重新下載。
