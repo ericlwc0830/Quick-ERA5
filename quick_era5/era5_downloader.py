@@ -320,7 +320,7 @@ def _to_datetime_should_be_at_the_beginning_of_the_hour(to_datetime):
 
 
 def _from_datetime_should_be_earlier_than_to_datetime(from_datetime, to_datetime):
-    if from_datetime >= to_datetime:
+    if from_datetime > to_datetime:
         raise ValueError(f"from_datetime should be earlier than to_datetime, but got from_datetime: {from_datetime}, to_datetime: {to_datetime}")
 
 
