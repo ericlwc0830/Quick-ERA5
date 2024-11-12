@@ -22,7 +22,7 @@ xarr = era5_downloader.download_era5_data_from_gcs(
     from_datetime=datetime.datetime(2020, 1, 1, tzinfo=datetime.timezone.utc),  # 包含此時間（include）
     to_datetime=datetime.datetime(2020, 1, 2, tzinfo=datetime.timezone.utc),  # 包含此時間（include）
     time_interval=1,  # 以小時為單位（in hours）
-    level_range=(500,1000)
+    level_range=(500,1000),
     latitude_range=(0, 90),
     longitude_range=(90, 180),
 )
