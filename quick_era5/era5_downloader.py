@@ -107,7 +107,8 @@ def download_era5_data_from_gcs(
     if longitude_shift:
         full_era5 = full_era5  # 下載的預設狀況就是有shift過的
     else:
-        full_era5 = full_era5.assign_coords(longitude=(((xarr.longitude + 180) % 360) - 180)).sortby('longitude')
+        # print(full_era5.longitude)
+        full_era5 = full_era5.assign_coords(longitude=(((full_era5.longitude + 180) % 360) - 180)).sortby('longitude')
 
     # [download the data]
     try:

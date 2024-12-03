@@ -46,19 +46,19 @@ def era5_xarray_to_geotiff(xarr: xarray.core.dataset.Dataset, variable: str, z: 
     # xarr should be an xarray dataset
     if not isinstance(xarr, xarray.core.dataset.Dataset):
         raise ValueError("The input xarr should be an xarray dataset.")
-    
+
     # variable should be a string
     if not isinstance(variable, str):
         raise ValueError("The input variable should be a string.")
-    
+
     # z should be a float or an integer
     if (not isinstance(z, (float, int))) and (z is not None):
         raise ValueError("The input z should be a float or an integer or None.")
-    
+
     # time should be a datetime object
     if not isinstance(time, datetime.datetime):
         raise ValueError("The input time should be a datetime.datetime object.")
-    
+
     # time should be in UTC, if not, convert it to UTC
     if time.tzinfo is None:
         time = time.replace(tzinfo=datetime.timezone.utc)
@@ -69,7 +69,7 @@ def era5_xarray_to_geotiff(xarr: xarray.core.dataset.Dataset, variable: str, z: 
     available_variables = list(xarr.data_vars)
     if variable not in available_variables:
         raise ValueError(f"The input variable({variable}) should be in the xarray dataset, available variables: {available_variables}")
-    
+
     # z should be in the xarr
     try:
         available_levels = list(xarr[variable].level.values)
@@ -78,16 +78,16 @@ def era5_xarray_to_geotiff(xarr: xarray.core.dataset.Dataset, variable: str, z: 
         available_levels = []
     if z not in available_levels and z != "only one":
         raise ValueError(f"The input z({z}) should be in the xarray dataset, available levels: {available_levels}")
-    
+
     # time should be in the xarr
     available_times = list(map(lambda x: (pd.to_datetime(x).to_pydatetime().replace(tzinfo=datetime.timezone.utc)), list(xarr.time.values)))
     if time not in available_times:
         raise ValueError(f"The input time {time} should be in the xarray dataset, available times: {available_times}")
-    
+
     # save_at should be a string
     if not isinstance(save_at, str):
         raise ValueError("The input save_at should be a string.")
-    
+
     # save_at should be a '.tif' file
     if not save_at.lower().endswith(".tif") and not save_at.lower().endswith(".tiff"):
         raise ValueError("The input save_at should be a '.tif' or '.tiff' file.")
@@ -108,10 +108,13 @@ def era5_xarray_to_geotiff(xarr: xarray.core.dataset.Dataset, variable: str, z: 
     delta_lon = abs(lon_list[1] - lon_list[0])
 
     # longitude is from 0 to 360 originally, we need to convert it to -180 to 180
-    lon_gt_180 = [i for i, lon in enumerate(lon_list) if lon >= 180][0]
-    lon_list = lon_list[lon_gt_180:] + lon_list[:lon_gt_180]
-    lon_list = [lon - 360 if lon >= 180 else lon for lon in lon_list]
-    array = np.concatenate((array[:, lon_gt_180:], array[:, :lon_gt_180]), axis=1)
+    try:
+        lon_greater_than_180 = [i for i, lon in enumerate(lon_list) if lon >= 180][0]
+        lon_list = lon_list[lon_greater_than_180:] + lon_list[:lon_greater_than_180]
+        lon_list = [lon - 360 if lon >= 180 else lon for lon in lon_list]
+        array = np.concatenate((array[:, lon_greater_than_180:], array[:, :lon_greater_than_180]), axis=1)
+    except IndexError:
+        pass
 
     # calculate georeference info
     north = lat_list[0] + delta_lat / 2
@@ -190,7 +193,7 @@ def era5_xarray_to_nparray(xarr: xarray.core.dataset.Dataset, variable: str, z: 
         available_levels = []
     if z not in available_levels and z != "only one":
         raise ValueError(f"The input z({z}) should be in the xarray dataset, available levels: {available_levels}")
-    
+
     # time should be in the xarr
     available_times = list(map(lambda x: (pd.to_datetime(x).to_pydatetime().replace(tzinfo=datetime.timezone.utc)), list(xarr.time.values)))
     if time not in available_times:
